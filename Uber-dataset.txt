@@ -1,0 +1,146 @@
+1 import pandas as pd
+uber_data=pd.read_csv(
+"Uber.csv",
+)
+uber_data.head(10)
+
+2 import pandas as pd
+temp=pd.DataFrame(
+{
+    'P':[1,2,3,4,5],
+    'Q':[10,15,20,25,30],
+    'R':['2025-01-13','2025-01-14','2025-01-15','2025-01-16','2025-01-17']
+})
+#temp.dtypes
+#temp.info()
+
+#converting object datatype to date datatype
+
+temp['R']=pd.to_datetime(temp['R'])
+temp.dtypes
+
+3 import pandas as pd
+temp1=pd.DataFrame(
+{
+    'P':[1,2,3,4,5],
+    'Q':[10,15,20,25,30],
+    'R':['13-01-2025','14-01-2025','15-01-2025','16-01-2025','17-01-2025']
+})
+#temp1.dtypes
+temp1['R']=pd.to_datetime(temp1['R'],format="%d-%m-%Y")
+temp1.dtypes
+
+4 #conerting int to string
+import pandas as pd
+temp1=pd.DataFrame(
+{
+    'P':[1,2,3,4,5],
+    'Q':[10,15,20,25,30],
+    'R':['13-01-2025','14-01-2025','15-01-2025','16-01-2025','17-01-2025']
+})
+temp1['P']=temp1['P'].astype(str)
+temp1.dtypes
+
+5  #finding the unique values
+import pandas as pd
+uber_data=pd.read_csv("Uber.csv")
+#unique values
+unique_data=uber_data['START*'].unique()
+print(unique_data)
+len(unique_data)
+
+#value count
+uber_data['START*'].value_counts()
+
+#mile >50
+a=uber_data[uber_data['MILES*']>50]
+print(a)
+
+#miles between 50-100
+b=uber_data[(uber_data['MILES*']>50) & (uber_data['MILES*']<100)]
+print(b)
+
+#uber ride's start city is NewYork
+uber_data.loc[uber_data['START*']=="New York"]
+
+#mile >50 and <100 whose city is New York
+display only start,stop and miles columns
+c=uber_data[(uber_data['MILES*']>50) & (uber_data['MILES*']<100)]
+uber_data[['START*','STOP*','MILES*']]
+
+c=uber_data[uber_data['START*']=="New York"]
+c[['START*','STOP*','MILES*']]
+
+
+#data with start column is either New York or Cary
+uber_data.loc[uber_data['START*'].isin(['New York','Cary'])]
+
+#display all records whose satrt city is a or b or c and stop city is x or y or z and miles b/w 10 to 20
+uber_data.loc[
+   (uber_data['START*'].isin(['New York','Cary','Palm Beach']))&
+    (uber_data['STOP*'].isin(['New York','Cary','Palm Beach']))&
+   (uber_data['MILES*']>10) & (uber_data['MILES*']<20)]
+
+
+# display all the records of january-2016
+uber_data['START_DATE*'] = pd.to_datetime(uber_data['START_DATE*'], errors='coerce')
+jan_rides = uber_data[(uber_data['START_DATE*'].dt.month == 1) & (uber_data['START_DATE*'].dt.year == 2016)]
+print(jan_rides)
+
+
+
+#display all records of jan-2016 and start city=Cary
+uber_data['START_DATE*'] = pd.to_datetime(uber_data['START_DATE*'], errors='coerce')
+jan_rides = uber_data[(uber_data['START_DATE*'].dt.month == 1) &
+                      (uber_data['START_DATE*'].dt.year == 2016)&
+                      (uber_data['START*']=="Cary")]
+print(jan_rides)
+
+
+6 #resetting the order of the records for above code
+uber_data['START_DATE*'] = pd.to_datetime(uber_data['START_DATE*'], errors='coerce')
+jan_rides = uber_data[(uber_data['START_DATE*'].dt.month == 1) &
+                     (uber_data['START_DATE*'].dt.year == 2016)&
+                   (uber_data['START*']=="Cary")]
+jan_rides.reset_index(inplace=True,drop=True)
+print(jan_rides)
+
+7 #sorting order 
+import pandas as pd
+uber_data=pd.read_csv("Uber.csv")
+#uber_data.sort_values(by='MILES*')
+uber_data.sort_values(by='MILES*',ascending=False)
+uber_data.sort_values(by=['START*','MILES*'],ascending=[True,False])
+
+8 #adding another column to the dataset MILES_CAT
+import numpy as np
+uber_data["MILES_CAT"]=np.where(uber_data['MILES*']>100,"Long trip","Short trip")
+uber_data.head()
+
+#another way to create a new column where all records are with 10
+uber_data['nc']=10
+
+9 #no.of long trips
+import numpy as np
+long_trips_count = len(uber_data[uber_data['DURATION'] == 'Long trip'])
+print(long_trips_count)
+
+#get no.of long,short and medium trips
+uber_data['DURATION'].value_counts()
+
+
+10  #group by
+import numpy as np
+total=uber_data.groupby('START*')['MILES*'].agg('mean')
+print(total)
+
+11  #avg miles for each purpose
+import numpy as np
+
+total=uber_data.groupby('PURPOSE*')['MILES*'].agg('mean')
+print(total)
+
+12  #avg,sum,max for category
+import numpy as np
+grouped=uber_data.groupby('CATEGORY*')['MILES*'].agg(['sum','mean','max'])
+print(grouped)
